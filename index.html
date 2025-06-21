@@ -1,0 +1,127 @@
+<htm>
+    <head>
+        <style type="text/css">
+            body {
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            main {
+                display: grid;
+                justify-content: center;
+            }
+
+            #table {
+                text-align: center;
+                border: 1px black solid;
+                font-weight: 1000;
+                font-size: 16;
+                line-height: 0.8em;
+            }
+
+            #table td {
+                width: 3em;
+                height: 3em;
+                border: 1px gray solid;
+            }
+
+            button {
+                padding: 1em;
+                margin: 0.5em;
+                border-radius: 3px;
+                box-shadow: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <div></div>
+            <table id="table">
+                <tbody></tbody>
+            </table>
+            <div>
+                <button id="scramble">Scramble</button>
+            </div>
+            <div>
+                Size: <input id="size" type="number" value="6" />
+            </div>
+        </main>
+    </body>
+    <script type="text/javascript">
+        let grid = [];
+        let N = 6;
+        const ADJ = [
+            { r: 0, c: 0 },
+            { r: 1, c: 0 },
+            { r: -1, c: 0 },
+            { r: 0, c: 1 },
+            { r: 0, c: -1 },
+        ];
+        const initialize = () => {
+            grid = [];
+            N = Number(document.getElementById('size').value);
+            // fill array
+            for (let i = 0; i < N; i++) {
+                const row = [];
+                for (let j = 0; j < N; j++) row.push(false);
+                grid.push(row);
+            }
+            renderTable();
+        }
+
+        const scramble = () => {
+            let rand = (new Date()).getMilliseconds();
+            const reps = 2 * N + rand % N;
+            rand = rand ^ (rand >> 1);
+            for (let i = 0; i < reps; i++) {
+                const p = {
+                    r: rand % N,
+                    c: (rand >> 1) % N,
+                }
+                rand = rand ^ (rand >> 1);
+                turnSwitch(p);
+            }
+            renderTable();
+        }
+
+        document.getElementById('scramble').addEventListener('click', scramble);
+
+        const turnSwitch = (p) => {
+            for (let i = 0; i < ADJ.length; i++) {
+                const d = { r: p.r + ADJ[i].r, c: p.c + ADJ[i].c };
+                if (d.r < 0 || d.r == N || d.c < 0 || d.c == N) continue;
+                grid[d.r][d.c] = !grid[d.r][d.c];
+            }
+        }
+
+        const clickTurnswitch = (ev) => {
+            const cell = ev.target;
+            turnSwitch({
+                r: Number(cell.dataset.r),
+                c: Number(cell.dataset.c)
+            });
+            renderTable();
+        }
+
+        const renderTable = () => {
+            const tbody = document.getElementById('table').tBodies[0];
+            let cells = document.getElementsByClassName('cell');
+            for (let i = 0; i < cells.length; i++) cells[i].removeEventListener('click', clickTurnswitch);
+            const s = grid.map((row, r) =>
+                `<tr>
+                    ${row.map((cell, c) =>
+                    `<td class="cell" data-r="${r}" data-c="${c}"> ${cell ? '&VerticalLine;<br>&VerticalLine;' : '&HorizontalLine;&HorizontalLine;&HorizontalLine;'} </td>`)
+                    .join('')}
+                </tr>`
+            ).join('');
+            //console.log(s);
+            tbody.innerHTML = s;
+            cells = document.getElementsByClassName('cell');
+            for (let i = 0; i < cells.length; i++) cells[i].addEventListener('click', clickTurnswitch);
+        }
+
+        document.getElementById('size').addEventListener('change', initialize);
+
+        initialize();
+    </script>
+</htm>
