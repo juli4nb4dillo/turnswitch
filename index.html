@@ -1,127 +1,165 @@
 <htm>
+
     <head>
         <style type="text/css">
             body {
-                font-family: 'Courier New', Courier, monospace;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
             }
 
             main {
                 display: grid;
-                justify-content: center;
+                place-items: center;
+
             }
 
-            #table {
-                text-align: center;
-                border: 1px black solid;
-                font-weight: 1000;
-                font-size: 16;
-                line-height: 0.8em;
+            p {
+                max-width: 40em;
             }
 
-            #table td {
-                width: 3em;
-                height: 3em;
-                border: 1px gray solid;
+            ul {
+                max-width: 36em;
             }
 
-            button {
-                padding: 1em;
-                margin: 0.5em;
-                border-radius: 3px;
-                box-shadow: none;
+            div.examples {
+                width: 40em;
+                border: 1px solid black;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
             }
+            div.examples h4 {
+                margin: 1em;
+            }
+            div.examples code {
+                border: 1px solid green;
+                margin: 1em;
+                white-space: pre-line;
+            }
+            
         </style>
     </head>
 
     <body>
         <main>
-            <div></div>
-            <table id="table">
-                <tbody></tbody>
-            </table>
+            <h1>Turnswitch</h1>
+            <p>
+                The starship Century Hawk is in the middle of a loosing battle with a squad of space pirates, possibly
+                after
+                realizing their business with Captain Hanna Lonely
+                was actually, sort of a scam. There is no escape but to jump to hyperspace. Unfortunately, the Century
+                Hawk
+                has
+                been at the receiving end of heavy fire, and
+                though Captain Lonely is a skilled pilot, the space pirates managed to hit home before she could shield
+                up.
+            </p>
+
+            <ul>
+                <li>
+                    <i>"It must be the hyperdrive regulator <b>Turnswitch</b>, it's not responding!" - yells the
+                        second in command</i>
+                </li>
+                <li>
+                    <i>"You, newbie, go to the hyperdrive and fix it up!" - Captain Lonely orders.</i>
+                </li>
+            </ul>
+            <p>
+                As the newbie - and the only crew member of the Century Hawk with any programming skills - your task is
+                to fix the <b>Turnswitch</b>, so the hyperdrive is back online.
+            </p>
+            <p>
+                The regulator <b>Turnswitch</b> is an <code>N &times; N</code> matrix of switches, each switch can be
+                either in
+                horizontal
+                or vertical position.
+            </p>
+            <p>
+                You discover that if you turn any switch -from horizontal to vertical or viceversa-, all the directly
+                adjacent
+                swiches (up, down, left, right) will also turn. If a switch
+                is on an edge of the matrix, or in a corner, the positions outside the matrix are ignored.
+            </p>
+            <p>
+                For instance let's consider the following <code>3 &times; 3</code> <b>Turnswitch</b>:
+            </p>
+
             <div>
-                <button id="scramble">Scramble</button>
+                <img src="tswitch1.png" alt="img1" width="160">
             </div>
+
+            <p>
+                If you turn the switch at the <b>very center</b>, the <b>Turnswitch</b> will become:
+            </p>
             <div>
-                Size: <input id="size" type="number" value="6" />
+                <img src="tswitch2.png" alt="img2" width="160">
             </div>
+            <p>
+                Now, if you turn the switch of the <b>bottom left corner</b>, the <b>Turnswitch</b> will become:
+            </p>
+            <div>
+                <img src="tswitch3.png" alt="img3" width="160">
+            </div>
+            <p>
+                The Century Hawk can jump to hyperdrive if the switches in the <b>Turnswitch</b> are either all
+                horizontal, or all vertical -it is a ship build under a very
+                liberal set of standards. Your task is to find the <b>least amount of switches</b> to turn in order to
+                make the Turnswitch ready for the jump.
+            </p>
+            <p>
+                The fate of the Century Hawk's crew is in your hands.
+            </p>
+
+            <p>
+                The input consist of several test cases. Each test case starts with an integer <code>N</code>
+                <code>1 &leq; N &leq; 10</code>,
+                the size of the Turnswitch.
+                The following <code>N</code> lines contain the Turnswitch matrix.
+                Each line contains <code>N</code> characters, either "|" (the vertical pipe) or "-" (the minus sign),
+                representing
+                the state of the switches.
+                There is a valid solution for each test case.
+                The last line of input will be a <code>0</code> (zero) and should not be processed.
+            </p>
+            <p>
+                For each test case, print a single line with the minimum number of switches that need to be turned in
+                order to make the Turnswitch ready for the jump, e.g. all the
+                switches become either horizontal or vertical.
+            </p>
+            <div class="examples">
+                <h4>Example Input</h4>
+                <h4>Example Output</h4>
+                
+                <code>
+                    3
+                    -||
+                    ---
+                    |-|
+                    3
+                    ||-
+                    |-|
+                    -||
+                    4
+                    -|-|
+                    ||-|
+                    ||-|
+                    ||--
+                    4
+                    |||-
+                    |---
+                    -|--
+                    -|-|
+                    0
+                </code>
+                <code>
+                    3
+                    2
+                    3
+                    3
+                </code>
+            </div>
+            <p>
+                <a href="./turnswitch.html">Try it here.</a>
+            </p>
         </main>
     </body>
-    <script type="text/javascript">
-        let grid = [];
-        let N = 6;
-        const ADJ = [
-            { r: 0, c: 0 },
-            { r: 1, c: 0 },
-            { r: -1, c: 0 },
-            { r: 0, c: 1 },
-            { r: 0, c: -1 },
-        ];
-        const initialize = () => {
-            grid = [];
-            N = Number(document.getElementById('size').value);
-            // fill array
-            for (let i = 0; i < N; i++) {
-                const row = [];
-                for (let j = 0; j < N; j++) row.push(false);
-                grid.push(row);
-            }
-            renderTable();
-        }
 
-        const scramble = () => {
-            let rand = (new Date()).getMilliseconds();
-            const reps = 2 * N + rand % N;
-            rand = rand ^ (rand >> 1);
-            for (let i = 0; i < reps; i++) {
-                const p = {
-                    r: rand % N,
-                    c: (rand >> 1) % N,
-                }
-                rand = rand ^ (rand >> 1);
-                turnSwitch(p);
-            }
-            renderTable();
-        }
-
-        document.getElementById('scramble').addEventListener('click', scramble);
-
-        const turnSwitch = (p) => {
-            for (let i = 0; i < ADJ.length; i++) {
-                const d = { r: p.r + ADJ[i].r, c: p.c + ADJ[i].c };
-                if (d.r < 0 || d.r == N || d.c < 0 || d.c == N) continue;
-                grid[d.r][d.c] = !grid[d.r][d.c];
-            }
-        }
-
-        const clickTurnswitch = (ev) => {
-            const cell = ev.target;
-            turnSwitch({
-                r: Number(cell.dataset.r),
-                c: Number(cell.dataset.c)
-            });
-            renderTable();
-        }
-
-        const renderTable = () => {
-            const tbody = document.getElementById('table').tBodies[0];
-            let cells = document.getElementsByClassName('cell');
-            for (let i = 0; i < cells.length; i++) cells[i].removeEventListener('click', clickTurnswitch);
-            const s = grid.map((row, r) =>
-                `<tr>
-                    ${row.map((cell, c) =>
-                    `<td class="cell" data-r="${r}" data-c="${c}"> ${cell ? '&VerticalLine;<br>&VerticalLine;' : '&HorizontalLine;&HorizontalLine;&HorizontalLine;'} </td>`)
-                    .join('')}
-                </tr>`
-            ).join('');
-            //console.log(s);
-            tbody.innerHTML = s;
-            cells = document.getElementsByClassName('cell');
-            for (let i = 0; i < cells.length; i++) cells[i].addEventListener('click', clickTurnswitch);
-        }
-
-        document.getElementById('size').addEventListener('change', initialize);
-
-        initialize();
-    </script>
-</htm>
+    </html>
