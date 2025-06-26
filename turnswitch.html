@@ -53,6 +53,7 @@
             </table>
             <div>
                 <button id="scramble">Scramble</button>
+                <button id="reset">Reset</button>
             </div>
             <div>
                 Size: <input id="size" type="number" value="6" />
@@ -66,6 +67,7 @@
     </body>
     <script type="text/javascript">
         let grid = [];
+        let initialGrid = [];
         let N = 6;
         const ADJ = [
             { r: 0, c: 0 },
@@ -83,6 +85,7 @@
                 for (let j = 0; j < N; j++) row.push(false);
                 grid.push(row);
             }
+            initialGrid = grid.map(row => Array.from(row));
             renderTable();
         }
 
@@ -95,7 +98,9 @@
                 }
                 turnSwitch(p);
             }
+            initialGrid = grid.map(row => Array.from(row));
             renderTable();
+            
         }
 
         document.getElementById('scramble').addEventListener('click', scramble);
@@ -116,6 +121,13 @@
             });
             renderTable();
         }
+
+        const resetTurnswitch = () => {
+            grid = initialGrid.map(row => Array.from(row));
+            renderTable();
+        }
+
+        document.getElementById('reset').addEventListener('click', resetTurnswitch);
 
         const renderTable = () => {
             const tbody = document.getElementById('table').tBodies[0];
